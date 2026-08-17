@@ -33,6 +33,9 @@ credentials covers every app; `applicationId` selects which):
 
 - `STORE_TENANT_ID`, `STORE_CLIENT_ID`, `STORE_CLIENT_SECRET`
 
+The tenant ID is also listed under Partner Center **Account settings → Tenants**,
+which doubles as a sanity check that the Entra association is actually in place.
+
 For local runs, put the same three as `KEY=value` lines in a git-ignored `.env`
 at the repo root. Without them, collection still records the GitHub numbers and
 leaves the Store column blank.
