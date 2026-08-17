@@ -38,9 +38,11 @@ at the repo root. Without them, collection still records the GitHub numbers and
 leaves the Store column blank.
 
 > **Rotation:** Entra client secrets expire (max 24 months). When Store columns
-> go blank and the workflow logs an auth warning, create a new client secret in
-> the Entra portal (App registrations → the app → Certificates & secrets) and
-> re-set only `STORE_CLIENT_SECRET`.
+> go blank and the workflow logs an auth warning, create a new key in Partner
+> Center: **Account settings → User management → Microsoft Entra applications →
+> "adb stats reader" → Add new key** (or via the Entra portal: App registrations
+> → the app → Certificates & secrets). Then re-set only `STORE_CLIENT_SECRET`:
+> `gh secret set STORE_CLIENT_SECRET -R CostaFot/stats`.
 
 ## Adding an app
 
