@@ -76,7 +76,20 @@ $headers = @{ Authorization = "Bearer $token" }
 $rows = [System.Collections.Generic.List[object]]::new()
 
 while ($uri) {
-    $resp = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers
+    # The analytics API rate-limits aggressively across back-to-back app
+    # queries; back off and retry on 429.
+    $attempts = 0
+    while ($true) {
+        try {
+            $resp = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers
+            break
+        } catch {
+            $attempts++
+            $status = $_.Exception.Response.StatusCode.value__
+            if ($status -ne 429 -or $attempts -ge 5) { throw }
+            Start-Sleep -Seconds (3 * $attempts)
+        }
+    }
     if ($resp.Value) { $rows.AddRange($resp.Value) }
     $uri = $resp.'@nextLink'
 }
