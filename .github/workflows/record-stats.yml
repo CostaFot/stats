@@ -1,0 +1,56 @@
+name: Record Stats
+
+on:
+  schedule:
+    - cron: '23 5 * * *'   # daily at 05:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare data branch clone
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Isolated clone so the orphan 'data' branch never touches main
+          # (main is what Railway deploys from — keep daily commits off it).
+          tmp="$(mktemp -d)"
+          cd "$tmp"
+          git init -q
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git fetch -q --depth 1 origin data 2>/dev/null; then
+            git checkout -q FETCH_HEAD -b data
+          else
+            git checkout -q --orphan data
+          fi
+          echo "DATA_CLONE=$tmp" >> "$GITHUB_ENV"
+
+      - name: Collect stats
+        shell: pwsh
+        env:
+          GH_TOKEN:            ${{ github.token }}
+          STORE_TENANT_ID:     ${{ secrets.STORE_TENANT_ID }}
+          STORE_CLIENT_ID:     ${{ secrets.STORE_CLIENT_ID }}
+          STORE_CLIENT_SECRET: ${{ secrets.STORE_CLIENT_SECRET }}
+        run: ./scripts/Collect-Stats.ps1 -DataDir "$env:DATA_CLONE/data"
+
+      - name: Commit and push
+        run: |
+          cd "$DATA_CLONE"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No change to commit"
+          else
+            git commit -q -m "stats: $(date -u +%F)"
+            git push -q origin data
+          fi

@@ -1,0 +1,12 @@
+{
+  "name": "stats",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Install stats dashboard for CostaFot's Command Palette extensions",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "adb",
+    "name": "ADB Extension",
+    "repo": "CostaFot/AdbExtension",
+    "storeId": "9NHDX4XWCNGS"
+  },
+  {
+    "slug": "market",
+    "name": "Markets Extension",
+    "repo": "CostaFot/MarketExtension",
+    "storeId": "9MV7M639533Q"
+  },
+  {
+    "slug": "agents",
+    "name": "Agents Panel",
+    "repo": "CostaFot/agents-panel-extension",
+    "storeId": "9N8KK0W45HG8"
+  },
+  {
+    "slug": "visualizer",
+    "name": "Visualizer",
+    "repo": "CostaFot/visualizer-extension",
+    "storeId": "9P2R1MXQP49Z"
+  }
+]

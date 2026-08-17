@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Stats — Costa's Command Palette extensions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect x='1' y='9' width='3' height='6' rx='1' fill='%232a78d6'/><rect x='6' y='5' width='3' height='10' rx='1' fill='%23eb6834'/><rect x='11' y='1' width='3' height='14' rx='1' fill='%231baf7a'/></svg>" />
+  <style>
+    :root {
+      color-scheme: light;
+      --page:           #f9f9f7;
+      --surface:        #fcfcfb;
+      --ink:            #0b0b0b;
+      --ink-2:          #52514e;
+      --muted:          #898781;
+      --grid:           #e1e0d9;
+      --baseline:       #c3c2b7;
+      --border:         rgba(11, 11, 11, 0.10);
+      --good:           #006300;
+      --series-1:       #2a78d6;
+      --series-2:       #eb6834;
+      --series-3:       #1baf7a;
+      --series-4:       #eda100;
+      --total-line:     #898781;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --page:           #0d0d0d;
+        --surface:        #1a1a19;
+        --ink:            #ffffff;
+        --ink-2:          #c3c2b7;
+        --muted:          #898781;
+        --grid:           #2c2c2a;
+        --baseline:       #383835;
+        --border:         rgba(255, 255, 255, 0.10);
+        --good:           #0ca30c;
+        --series-1:       #3987e5;
+        --series-2:       #d95926;
+        --series-3:       #199e70;
+        --series-4:       #c98500;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 40px 24px 56px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    h1 { font-size: 1.5rem; margin: 0; letter-spacing: -0.01em; }
+    .subtitle { color: var(--ink-2); font-size: 0.9rem; margin: 2px 0 0; }
+    #updated { color: var(--muted); font-size: 0.85rem; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .tile .label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tile .value {
+      font-size: 1.9rem;
+      font-weight: 650;
+      margin-top: 2px;
+      letter-spacing: -0.01em;
+    }
+    .tile .note { color: var(--ink-2); font-size: 0.8rem; margin-top: 2px; }
+    .delta-up { color: var(--good); font-weight: 600; }
+
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .app .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .app .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: none;
+    }
+    .app .links { margin-left: auto; display: flex; gap: 8px; }
+    .app .links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1px 7px;
+    }
+    .app .links a:hover { color: var(--ink); border-color: var(--baseline); }
+    .app .value { font-size: 1.6rem; font-weight: 650; margin-top: 8px; }
+    .app .breakdown { color: var(--ink-2); font-size: 0.82rem; margin: 0 0 8px; }
+    .app .spark { height: 44px; }
+    .app.empty .value { color: var(--muted); font-weight: 500; font-size: 1.1rem; }
+
+    .chart-card { margin-bottom: 14px; }
+    .chart-card h2 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .chart-card .hint { color: var(--muted); font-size: 0.8rem; margin: 0 0 10px; }
+    .chart-box { position: relative; height: 340px; }
+
+    #status { color: var(--muted); padding: 32px 0; text-align: center; }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 20px;
+    }
+    footer a { color: var(--ink-2); }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 24px 16px 40px; }
+      .chart-box { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>App Stats</h1>
+        <p class="subtitle">Command Palette extensions &mdash; GitHub, WinGet &amp; Microsoft Store, updated daily</p>
+      </div>
+      <span id="updated"></span>
+    </header>
+
+    <p id="status">Loading stats&hellip;</p>
+
+    <main id="content" hidden>
+      <section class="tiles" id="tiles" aria-label="Totals"></section>
+      <section class="apps" id="apps" aria-label="Per-app stats"></section>
+      <section class="card chart-card">
+        <h2>Cumulative installs over time</h2>
+        <p class="hint">GitHub + WinGet downloads plus Store acquisitions, per app</p>
+        <div class="chart-box"><canvas id="chart"></canvas></div>
+      </section>
+    </main>
+
+    <footer>
+      Data recorded daily by <a href="https://github.com/CostaFot/stats/actions/workflows/record-stats.yml">GitHub Actions</a>
+      to the <a href="https://github.com/CostaFot/stats/tree/data/data"><code>data</code> branch</a>.
+      GitHub counts direct + WinGet release downloads; Store counts acquisitions. Store analytics lag a day or two.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
