@@ -2,7 +2,11 @@
    Reads per-app CSVs (date,github_downloads,store_acquisitions — cumulative)
    from the stats repo's `data` branch at runtime. */
 
-const DATA_BASE = "https://raw.githubusercontent.com/CostaFot/stats/data/data/";
+// refs/heads/ keeps the ref unambiguous — the short form (/stats/data/data/…)
+// makes raw.githubusercontent.com guess where the ref ends, and it 400s on
+// some paths.
+const DATA_BASE =
+  "https://raw.githubusercontent.com/CostaFot/stats/refs/heads/data/data/";
 const SERIES_VARS = ["--series-1", "--series-2", "--series-3", "--series-4"];
 
 const fmt = (n) => (n == null ? "–" : Math.round(n).toLocaleString("en-US"));

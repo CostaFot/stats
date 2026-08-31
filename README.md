@@ -10,8 +10,8 @@ straight from this repo, so it needs no redeploys to stay current.
 GitHub Actions (daily, 05:23 UTC)          Railway (static site)
   record-stats.yml                           server.js serves site/
     └─ Collect-Stats.ps1                       └─ app.js fetches
-         ├─ gh api <repo>/releases                raw.githubusercontent.com/
-         ├─ Get-StoreStats.ps1 (Store API)        CostaFot/stats/data/data/<slug>.csv
+         ├─ gh api <repo>/releases                raw.githubusercontent.com/CostaFot/
+         ├─ Get-StoreStats.ps1 (Store API)        stats/refs/heads/data/data/<slug>.csv
          └─ upsert data/<slug>.csv                at runtime (CORS is open there)
               └─ commit to orphan `data` branch
 ```
@@ -22,6 +22,9 @@ GitHub Actions (daily, 05:23 UTC)          Railway (static site)
   column); the dashboard forward-fills.
 - **`main`**: everything else. Railway deploys from here; daily data commits
   never touch it.
+- The raw URLs spell out `refs/heads/data` on purpose: the short form
+  (`/stats/data/data/<slug>.csv`) leaves GitHub guessing where the ref ends,
+  and it returns 400 for some files (seen with `market.csv`, Aug 2026).
 - **`site/apps.json`** is the single source of truth for the app list — read by
   the collector in CI and fetched by the dashboard.
 
