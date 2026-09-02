@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Records today's cumulative download/install numbers for every app in
-    site/apps.json, one CSV per app in -DataDir.
+    apps.json, one CSV per app in -DataDir.
 
 .DESCRIPTION
     Per app:
@@ -20,7 +20,7 @@
 param(
     [Parameter(Mandatory)]
     [string] $DataDir,
-    [string] $AppsConfig = (Join-Path $PSScriptRoot "..\site\apps.json")
+    [string] $AppsConfig = (Join-Path $PSScriptRoot "..\apps.json")
 )
 
 $ErrorActionPreference = "Stop"

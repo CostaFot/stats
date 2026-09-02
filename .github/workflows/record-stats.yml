@@ -20,7 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           # Isolated clone so the orphan 'data' branch never touches main
-          # (main is what Railway deploys from — keep daily commits off it).
+          # (keeps daily commits off main).
           tmp="$(mktemp -d)"
           cd "$tmp"
           git init -q

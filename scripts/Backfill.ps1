@@ -6,7 +6,7 @@
 .DESCRIPTION
     - adb: AdbExtension has recorded daily stats since launch on its own
       `stats` branch — copied verbatim (same CSV schema).
-    - Every other app in site/apps.json: daily Store acquisition history is
+    - Every other app in apps.json: daily Store acquisition history is
       queried from the analytics API (it keeps history) and running-summed
       into cumulative values. GitHub download history is unrecoverable — the
       API only exposes current totals — so that column stays blank; daily
@@ -18,7 +18,7 @@
 [CmdletBinding()]
 param(
     [string]   $DataDir    = (Join-Path $PSScriptRoot "..\_data"),
-    [string]   $AppsConfig = (Join-Path $PSScriptRoot "..\site\apps.json"),
+    [string]   $AppsConfig = (Join-Path $PSScriptRoot "..\apps.json"),
     [datetime] $StartDate  = [datetime]"2026-04-01"
 )
 
